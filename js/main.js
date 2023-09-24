@@ -47,6 +47,38 @@ let catElement = `
 $(".container-fluid .row").html(catElement);
 
 let catElements;
+// starting
+async function start() {
+  let res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s`);
+  let nameData = await res.json();
+  console.log(nameData);
+  catElements = ``;
+  if ($(nameData.meals).length == 0) {
+    console.log("if");
+    catElements = ``;
+    $(".container-fluid .row").html(catElements);
+  } else {
+    for (let i = 0; i < nameData.meals.length; i++) {
+      catElements += `
+    <div class="col-md-3 col-12  m-auto position-relative my-2 " >
+    <div class="layer position-absolute">
+    <h3 class=" text-dark mt-5 " id="catName">${nameData.meals[i].strMeal}</h3>
+    </div>
+   <img src='${nameData.meals[i].strMealThumb}' class="w-100" class="catImg">
+  </div> 
+    `;
+      $(".container-fluid .row").html(catElements);
+    }
+    $("h3").click((e) => {
+      let tergetMeal = e.target;
+      let meal = $(tergetMeal).text();
+
+      mealClicked(meal);
+    });
+    return catElements;
+  }
+}
+start();
 
 // search
 $("#search").click(() => {
